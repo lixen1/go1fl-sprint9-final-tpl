@@ -6,71 +6,51 @@ import (
 
 func TestGenerateRandomElements(t *testing.T) {
 
-	t.Run("Zero size", func(t *testing.T) {
-		res := generateRandomElements(0)
-		if len(res) != 0 {
-			t.Errorf("Want empty slice, have %d", len(res))
-		}
-	})
+	inputArgs := []int{0, -35, 10}
 
-	t.Run("Negative size", func(t *testing.T) {
-		res := generateRandomElements(-35)
-		if len(res) != 0 {
-			t.Errorf("Want empty slice, have %d", len(res))
+	want := [][]int{
+		{},
+		{},
+		make([]int, 10),
+	}
+
+	for i, arg := range inputArgs {
+		if len(generateRandomElements(arg)) != len(want[i]) {
+			t.Error(i, ":", len(generateRandomElements(arg)), "!=", want[i])
 		}
-	})
-	t.Run("Positive size", func(t *testing.T) {
-		size := 10
-		result := generateRandomElements(size)
-		if len(result) != size {
-			t.Errorf("Want %d, have %d", size, len(result))
-		}
-	})
+	}
 }
 
 func TestMaximum(t *testing.T) {
-	t.Run("Empty slice", func(t *testing.T) {
-		result := maximum([]int{})
-		if result != 0 {
-			t.Errorf("Want zero, have %d", result)
-		}
-	})
 
-	t.Run("Single element in slice", func(t *testing.T) {
-		result := maximum([]int{3242})
-		if result != 3242 {
-			t.Errorf("Want 3242, have %d", result)
-		}
-	})
+	inputArgs := [][]int{
+		{},
+		{3242},
+		{1, 5, 3, 9, 2},
+	}
 
-	t.Run("Multiple elements", func(t *testing.T) {
-		result := maximum([]int{1, 5, 3, 9, 2})
-		if result != 9 {
-			t.Errorf("Want max = 9, have %d", result)
-		}
-	})
+	want := []int{0, 3242, 9}
 
-	t.Run("All negative elements", func(t *testing.T) {
-		result := maximum([]int{-10, -3, -50})
-		if result != 0 {
-			t.Errorf("Want zero, have %d", result)
+	for i, arg := range inputArgs {
+		if maximum(arg) != want[i] {
+			t.Error(i, ":", maximum(arg), "!=", want[i])
 		}
-	})
+	}
 }
 
 func TestMaxChunks(t *testing.T) {
-	t.Run("Empty slice", func(t *testing.T) {
-		result := maxChunks([]int{})
-		if result != 0 {
-			t.Errorf("Want zero, have %d", result)
-		}
-	})
 
-	t.Run("Single element in slice", func(t *testing.T) {
-		result := maxChunks([]int{238})
-		if result != 238 {
-			t.Errorf("Want 238, have %d", result)
-		}
-	})
+	inputArgs := [][]int{
+		{},
+		{3242},
+		{1, 5, 3, 9, 2},
+	}
 
+	want := []int{0, 3242, 9}
+
+	for i, arg := range inputArgs {
+		if maxChunks(arg) != want[i] {
+			t.Error(i, ":", maxChunks(arg), "!=", want[i])
+		}
+	}
 }

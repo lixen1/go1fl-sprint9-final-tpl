@@ -31,10 +31,14 @@ func generateRandomElements(size int) []int {
 func maximum(data []int) int {
 	if len(data) == 0 {
 		return 0
-	} else if len(data) == 1 {
+	}
+
+	if len(data) == 1 {
 		return data[0]
 	}
-	maxNum := 0
+
+	maxNum := data[0]
+
 	for i := range data {
 		if data[i] > maxNum {
 			maxNum = data[i]
@@ -52,35 +56,32 @@ func maxChunks(data []int) int {
 	}
 
 	var wg sync.WaitGroup
-	sizeOfSlice := SIZE / CHUNKS
+	sizeOfSlice := len(data) / CHUNKS
 	maxInSlices := make([]int, CHUNKS)
+	haveRest := false
+
+	if len(data)%CHUNKS != 0 {
+		haveRest = true
+	}
 
 	wg.Add(CHUNKS)
 
-	for i := 0; i < CHUNKS; i++ {
+	for i := range CHUNKS {
 		initalIndex := i * sizeOfSlice
+		finalIndex := initalIndex + sizeOfSlice
+
+		if haveRest {
+			finalIndex += 1 // наверное костыль, но ничего лучше не придумал
+		}
 
 		go func(slice []int) {
 			defer wg.Done()
-			maxNum := 0
-
-			for j := range slice {
-				if slice[j] > maxNum {
-					maxNum = slice[j]
-				}
-			}
-			maxInSlices[i] = maxNum
-		}(data[initalIndex : initalIndex+sizeOfSlice])
+			maxInSlices[i] = maximum(data)
+		}(data[initalIndex:finalIndex])
 	}
 	wg.Wait()
 
-	totalMax := 0
-	for i := range maxInSlices {
-		if maxInSlices[i] > totalMax {
-			totalMax = maxInSlices[i]
-		}
-	}
-	return totalMax
+	return maximum(maxInSlices)
 }
 
 func main() {
